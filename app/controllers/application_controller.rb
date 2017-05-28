@@ -2,6 +2,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def index
-    render 'pages/auth'
+    render 'game/field'
   end
 end
