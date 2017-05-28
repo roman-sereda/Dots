@@ -10,14 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170528074510) do
+ActiveRecord::Schema.define(version: 20170528080203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "captured_zones", force: :cascade do |t|
+    t.integer "field_id"
+    t.integer "player_id"
+    t.string "points", default: [], array: true
+  end
+
   create_table "fields", force: :cascade do |t|
-    t.string "name"
-    t.string "points"
+    t.string "name", null: false
+    t.text "points", default: [], array: true
+    t.integer "player_one_id"
+    t.integer "player_two_id"
+    t.integer "player_one_score"
+    t.integer "player_two_score"
+    t.boolean "is_finished"
+    t.boolean "turn", default: false
   end
 
   create_table "users", force: :cascade do |t|

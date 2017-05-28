@@ -1,0 +1,4 @@
+class CapturedZonesController < ApplicationController
+
+
+end
