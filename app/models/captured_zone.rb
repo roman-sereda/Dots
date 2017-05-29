@@ -1,0 +1,3 @@
+class CapturedZone < ApplicationRecord
+
+end
