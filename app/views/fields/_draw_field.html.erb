@@ -5,6 +5,9 @@ $(document).ready(function(){
 
   field.addEventListener("click", getPosition, false);
 
+  var coors = [[5,5], [6,6], [5,7], [4,6]]
+  var coors2 = [[4,4], [7,7], [4,8], [3,7]]
+
   for(var i = 0; i < 20; i++){
     var ctx = field.getContext("2d");
 
@@ -29,7 +32,7 @@ $(document).ready(function(){
         var point = field.getContext('2d');
 
         point.beginPath();
-        point.arc(<%= i %> * 20, <%= j %> * 20, 7, 0, 2*Math.PI, false);
+        point.arc(<%= i %> * 20, <%= j %> * 20, 5, 0, 2*Math.PI, false);
         point.fillStyle = 'red';
         point.fill();
         point.lineWidth = 1;
@@ -40,7 +43,7 @@ $(document).ready(function(){
         var point = field.getContext('2d');
 
         point.beginPath();
-        point.arc(<%= i %> * 20, <%= j %> * 20, 7, 0, 2*Math.PI, false);
+        point.arc(<%= i %> * 20, <%= j %> * 20, 5, 0, 2*Math.PI, false);
         point.fillStyle = 'red';
         point.fill();
         point.lineWidth = 1;
@@ -49,6 +52,26 @@ $(document).ready(function(){
       }
     <% end %>
   <% end %>
+
+  var zone = field.getContext("2d")
+  zone.beginPath()
+  zone.moveTo(coors[0][0] * 20, coors[0][1] * 20)
+
+  for(var i = 1; i < coors.length; i++){
+    zone.lineTo(coors[i][0] * 20, coors[i][1] * 20)
+  }
+  zone.fillStyle = "rgba(0,0,255,0.5)"
+  zone.fill()
+
+  var zone2 = field.getContext("2d")
+  zone2.beginPath()
+  zone2.moveTo(coors2[0][0] * 20, coors2[0][1] * 20)
+
+  for(var i = 1; i < coors.length; i++){
+    zone2.lineTo(coors2[i][0] * 20, coors2[i][1] * 20)
+  }
+  zone2.fillStyle = "rgba(255,0,0,0.5)"
+  zone2.fill()
 
 });
 
