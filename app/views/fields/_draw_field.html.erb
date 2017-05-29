@@ -82,6 +82,19 @@ function draw_zone(coors, color){
   zone.fill()
 }
 
+function draw_point(coors, color){
+  console.log(coors)
+  var point = field.getContext("2d")
+
+  point.beginPath();
+  point.arc(20 * coors[0], 20 * coors[1], 7, 0, 2*Math.PI, false);
+  point.fillStyle = color;
+  point.fill();
+  point.lineWidth = 1;
+  point.strokeStyle = color;
+  point.stroke();
+}
+
 function getPosition(event){
   var rect = field.getBoundingClientRect();
   var x = event.clientX - rect.left;

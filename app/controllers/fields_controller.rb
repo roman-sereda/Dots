@@ -41,7 +41,7 @@ class FieldsController < ApplicationController
 
     find_captured_zones
 
-    ActionCable.server.broadcast 'game_channel', data: 'obama'
+    ActionCable.server.broadcast 'game_channel', { type_to_add: 'point', coors: [@x, @y]}
   end
 
   def find_captured_zones
