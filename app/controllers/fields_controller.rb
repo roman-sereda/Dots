@@ -41,7 +41,7 @@ class FieldsController < ApplicationController
 
     find_captured_zones
 
-    ActionCable.server.broadcast 'game_channel', { type_to_add: 'point', coors: [@x, @y]}
+    ActionCable.server.broadcast 'game_channel', { type_to_add: 'point', coors: [@x, @y], user: current_user.id}
   end
 
   def find_captured_zones
@@ -147,6 +147,8 @@ class FieldsController < ApplicationController
     p captured_zone
     CapturedZone.create(player_id: current_user.id, field_id: params[:id], points: captured_zone)
 
+    ActionCable.server.broadcast 'game_channel', { type_to_add: 'capture_zone', coors: captured_zone, user: current_user.id }
+
   end
 
   def there_is_nearest_points?
@@ -162,6 +164,7 @@ class FieldsController < ApplicationController
 
   def show
     @field = Field.find(params[:id])
+    @current_user_id = current_user.id
     @friendly_captured_zones = []
     @enemy_captured_zones = []
 

@@ -70,7 +70,7 @@ $(document).ready(function(){
   <% end %>
 });
 
-function draw_zone(coors, color){
+function draw_zone(coors, user){
   var zone = field.getContext("2d")
   zone.beginPath()
   zone.moveTo(coors[0][0] * 20, coors[0][1] * 20)
@@ -78,20 +78,20 @@ function draw_zone(coors, color){
   for(var i = 1; i < coors.length; i++){
     zone.lineTo(coors[i][0] * 20, coors[i][1] * 20)
   }
-  zone.fillStyle = color
+  zone.fillStyle = (<%= current_user %> == user ? "rgba(0,0,255,0.6)" : "rgba(255,0,0,0.6)")
   zone.fill()
 }
 
-function draw_point(coors, color){
+function draw_point(coors, user){
   console.log(coors)
   var point = field.getContext("2d")
 
   point.beginPath();
   point.arc(20 * coors[0], 20 * coors[1], 7, 0, 2*Math.PI, false);
-  point.fillStyle = color;
+  point.fillStyle = (<%= current_user %> == user ? "rgba(0,0,255,0.6)" : "rgba(255,0,0,0.6)")
   point.fill();
   point.lineWidth = 1;
-  point.strokeStyle = color;
+  point.strokeStyle = "rgba(0,0,0,0)";
   point.stroke();
 }
 
@@ -117,14 +117,6 @@ function putPoint(x,y){
   }else{
     y = ~~(y / 20)
   };
-
-  point.beginPath();
-  point.arc(20 * x, 20 * y, 7, 0, 2*Math.PI, false);
-  point.fillStyle = 'red';
-  point.fill();
-  point.lineWidth = 1;
-  point.strokeStyle = 'red';
-  point.stroke();
 
   $.ajax({
     url: "/new_point",
