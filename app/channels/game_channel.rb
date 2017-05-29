@@ -1,11 +1,9 @@
 class GameChannel < ApplicationCable::Channel
-
   def subscribed
-    field = Field.find(params[:id])
     stream_from "game_channel"
   end
 
   def unsubscribed
-
+    # Any cleanup needed when channel is unsubscribed
   end
 end

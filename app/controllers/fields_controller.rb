@@ -40,6 +40,8 @@ class FieldsController < ApplicationController
     @field.update_attributes(points: temp_points)
 
     find_captured_zones
+
+    ActionCable.server.broadcast 'game_channel', data: 'obama'
   end
 
   def find_captured_zones

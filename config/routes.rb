@@ -12,4 +12,6 @@ Rails.application.routes.draw do
   post  '/new_point',       to: 'fields#new_point'
   get   '/fields/:id',      to: 'fields#show'
 
+  mount ActionCable.server, at: '/cable'
+
 end
