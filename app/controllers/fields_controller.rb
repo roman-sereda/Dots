@@ -16,7 +16,7 @@ class FieldsController < ApplicationController
       end
     end
 
-    field = Field.create(name: params[:field][:name], points: points)
+    @field = Field.create(name: params[:field][:name], points: points)
 
     render 'fields/show'
   end
