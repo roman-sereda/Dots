@@ -2,8 +2,8 @@ class FieldsController < ApplicationController
 
   def index
     @fields = Field.all
-
-    render 'fields/index'
+    @avaliable_games = Field.where(closed: false)
+    @my_games = (Field.where(player_one_id: current_user.id) + Field.where(player_two_id: current_user.id)).uniq
   end
 
   def create
@@ -18,13 +18,15 @@ class FieldsController < ApplicationController
 
     @field = Field.create(name: params[:field][:name], points: points, player_one_id: current_user.id)
 
-    render 'fields/show'
+    redirect_to action: "show", id: @field.id
   end
 
   def receive_request
 
     field = Field.find(params[:id])
-    field.update_attributes(second_player_id: current_user.id, closed: true)
+    field.update_attributes(player_two_id: current_user.id, closed: true)
+
+    redirect_to action: "show"
 
   end
 

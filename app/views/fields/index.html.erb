@@ -3,6 +3,20 @@
   <%= f.submit %>
 <% end %>
 
+<br><br>All games:
+
 <% @fields.each do | field | %>
+  <%= link_to field.name, "fields/#{field.id}" %>
+<% end %>
+
+<br><br>Avaliable Games:
+
+<% @avaliable_games.each do | field | %>
+  <%= link_to field.name, "accept_field/#{field.id}" %>
+<% end %>
+
+<br><br>My Games:
+
+<% @my_games.each do | field | %>
   <%= link_to field.name, "fields/#{field.id}" %>
 <% end %>

@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20170529125113) do
   create_table "captured_zones", force: :cascade do |t|
     t.integer "field_id"
     t.integer "player_id"
-    t.string "points", default: [], array: true
+    t.text "points", default: [], array: true
   end
 
   create_table "fields", force: :cascade do |t|
