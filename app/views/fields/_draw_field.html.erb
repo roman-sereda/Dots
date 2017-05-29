@@ -62,7 +62,7 @@ function draw_zone(coors, user){
   for(var i = 1; i < coors.length; i++){
     zone.lineTo(coors[i][0] * 20, coors[i][1] * 20)
   }
-  zone.fillStyle = (<%= current_user %> == user ? "rgba(0,0,2255,0.6)" : "rgba(255,0,0,0.6)")
+  zone.fillStyle = (<%= current_user %> == user ? "rgba(0,0,2255,0.3)" : "rgba(255,0,0,0.3)")
   zone.fill()
 }
 
@@ -77,6 +77,12 @@ function draw_point(coors, user){
   point.lineWidth = 1;
   point.strokeStyle = "rgba(0,0,0,0)";
   point.stroke();
+}
+
+function update_score(player, enemy){
+  console.log('1')
+  $("#player_score").text(player)
+  $("#enemy_score").text(enemy)
 }
 
 function getPosition(event){

@@ -170,8 +170,6 @@ class FieldsController < ApplicationController
       if(@field.points[point[0]][point[1]].to_i == @enemy)
         score += 1
         @field.points[point[0]][point[1]] = "#{-@enemy}"
-      else
-        @field.points[point[0]][point[1]] = "3"
       end
     end
 
@@ -184,7 +182,11 @@ class FieldsController < ApplicationController
       @field.update_attributes(player_two_score: score)
     end
 
-    ActionCable.server.broadcast 'game_channel', { type_to_add: 'capture_zone', coors: captured_zone, user: current_user.id }
+    ActionCable.server.broadcast 'game_channel', {  type_to_add: 'capture_zone',
+                                                    coors: captured_zone,
+                                                    user: current_user.id,
+                                                    player_one_score: @field.player_one_score,
+                                                    player_two_score: @field.player_two_score }
 
   end
 
