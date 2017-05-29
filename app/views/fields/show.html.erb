@@ -1,6 +1,8 @@
-<%= render 'draw_field', :points => @field.points, :field_id => @field.id %>
+
+
+<%= render 'draw_field', :points => @field.points, :field_id => @field.id, :captured_zones => @friendly_captured_zones %>
 
 <canvas id = "field" width = "400" height = "400"></canvas>
 
-<%= link_to "Sign Out", destroy_user_session_path %>
+<%= link_to "Sign Out", destroy_user_session_path, :method => :delete %>
 <%= link_to 'back to list', '/'%>

@@ -53,6 +53,12 @@ $(document).ready(function(){
     <% end %>
   <% end %>
 
+  <% captured_zones.each do |points| %>
+    draw_zone(<%= raw points.as_json %> )
+  <% end %>
+});
+
+function draw_zone(coors){
   var zone = field.getContext("2d")
   zone.beginPath()
   zone.moveTo(coors[0][0] * 20, coors[0][1] * 20)
@@ -62,18 +68,7 @@ $(document).ready(function(){
   }
   zone.fillStyle = "rgba(0,0,255,0.5)"
   zone.fill()
-
-  var zone2 = field.getContext("2d")
-  zone2.beginPath()
-  zone2.moveTo(coors2[0][0] * 20, coors2[0][1] * 20)
-
-  for(var i = 1; i < coors.length; i++){
-    zone2.lineTo(coors2[i][0] * 20, coors2[i][1] * 20)
-  }
-  zone2.fillStyle = "rgba(255,0,0,0.5)"
-  zone2.fill()
-
-});
+}
 
 function getPosition(event){
   var rect = field.getBoundingClientRect();

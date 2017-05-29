@@ -16,9 +16,16 @@ class FieldsController < ApplicationController
       end
     end
 
-    @field = Field.create(name: params[:field][:name], points: points)
+    @field = Field.create(name: params[:field][:name], points: points, player_one_id: cerrent_user.id)
 
     render 'fields/show'
+  end
+
+  def receive_request
+
+    field = Field.find(params[:id])
+    field.update_attributes(second_player_id: current_user.id, closed: true)
+
   end
 
   def new_point
@@ -145,6 +152,15 @@ class FieldsController < ApplicationController
 
   def show
     @field = Field.find(params[:id])
+    @friendly_captured_zones = []
+
+    CapturedZone.where(player_id: current_user.id, field_id: params[:id]).each do |zone|
+      @friendly_captured_zones.push(zone.points)
+    end
+
+    p params[:id]
+    p current_user.id
+    p @friendly_captured_zones
 
     render 'fields/show'
   end
