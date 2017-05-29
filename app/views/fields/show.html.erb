@@ -1,5 +1,7 @@
 <%= render 'draw_field', :points => @field.points,
                          :field_id => @field.id,
+                         :player => @player,
+                         :enemy => @enemy,
                          :current_user => @current_user_id,
                          :captured_zones => @friendly_captured_zones,
                          :enemy_captured_zones => @enemy_captured_zones %>
@@ -8,3 +10,6 @@
 
 <%= link_to "Sign Out", destroy_user_session_path, :method => :delete %>
 <%= link_to 'back to list', '/'%>
+Current user: <%= @current_user_id %><br>
+Enemy: <%= @enemy %><br>
+Player: <%= @player %><br>

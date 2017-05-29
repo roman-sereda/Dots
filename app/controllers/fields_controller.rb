@@ -32,10 +32,13 @@ class FieldsController < ApplicationController
     @field = Field.find(params[:id])
     @x = params[:x].to_i
     @y = params[:y].to_i
+    @player = (@field.player_one_id == current_user.id ? 1 : 2)
     @steps = { x: [0,-1,1,0], y: [-1,0,0,1] }
 
+    p @player
+
     temp_points = @field.points
-    temp_points[@x][@y] = 1
+    temp_points[@x][@y] = @player
 
     @field.update_attributes(points: temp_points)
 
@@ -45,8 +48,9 @@ class FieldsController < ApplicationController
   end
 
   def find_captured_zones
-
+    p 'try to find three nearest points'
     if there_is_nearest_points?
+      p 'found two nearest points'
       search_captured_zone
     end
 
@@ -57,7 +61,7 @@ class FieldsController < ApplicationController
     p '!'
 
     4.times do |i|
-      if(@field.points[@x + @steps[:x][i]][@y + @steps[:y][i]] == "0")
+      if(@field.points[@x + @steps[:x][i]][@y + @steps[:y][i]].to_i != @player && @field.points[@x + @steps[:x][i]][@y + @steps[:y][i]].to_i != -@player)
         last_turn = 0
         has_end = true
         current_position = [ @x + @steps[:x][i] , @y + @steps[:y][i] ]
@@ -70,7 +74,7 @@ class FieldsController < ApplicationController
             4.times do |j|
               next_position = [ current_position[0] + @steps[:x][j], current_position[1] + @steps[:y][j] ]
 
-              if(@field.points[next_position[0]][next_position[1]] == "0" && !checked_positions.include?(next_position) )
+              if(@field.points[next_position[0]][next_position[1]].to_i != @player && @field.points[next_position[0]][next_position[1]].to_i != -@player && !checked_positions.include?(next_position) )
                 checked_positions.push(next_position)
               end
             end
@@ -105,7 +109,7 @@ class FieldsController < ApplicationController
       4.times do |i|
         next_checked = [ pos[0] + @steps[:x][i], pos[1] + @steps[:y][i] ]
 
-        if( @field.points[next_checked[0]][next_checked[1]] == "1" && !captured_points.include?( next_checked ))
+        if( @field.points[next_checked[0]][next_checked[1]].to_i == @player && !captured_points.include?( next_checked ))
           captured_points.push( next_checked )
         end
       end
@@ -123,7 +127,7 @@ class FieldsController < ApplicationController
         do_break2 = false
         for k2 in -1..1
           do_break = false
-          if(@field.points[temp_point[0] + k][temp_point[1] + k2] == "1")
+          if(@field.points[temp_point[0] + k][temp_point[1] + k2].to_i == @player)
             captured_points.each do | point |
               if(temp_point[0] + k == point[0] && temp_point[1] + k2 == point[1] && !captured_zone.include?( point ))
                 temp_point = point
@@ -147,6 +151,10 @@ class FieldsController < ApplicationController
     p captured_zone
     CapturedZone.create(player_id: current_user.id, field_id: params[:id], points: captured_zone)
 
+    captured_points.length.times do |i|
+      @field.points[captured_points[i][0]][captured_points[i][1]] = "#{-@player}";
+    end
+
     ActionCable.server.broadcast 'game_channel', { type_to_add: 'capture_zone', coors: captured_zone, user: current_user.id }
 
   end
@@ -155,16 +163,23 @@ class FieldsController < ApplicationController
 
     count = 0
 
-    4.times.each do |i|
-      count+=1 if @field.points[@x + @steps[:x][i]][@y + @steps[:y][i]] != "0"
+    for i in -1..1
+      for j in -1..1
+        p @field.points[@x + i][@y + j]
+        p @player
+        count+=1 if @field.points[@x + i][@y + j].to_i == @player
+      end
     end
-
-    return count >= 2 ? true : false
+    p count
+    return count >= 3 ? true : false
   end
 
   def show
     @field = Field.find(params[:id])
     @current_user_id = current_user.id
+    @enemy = (@field.player_one_id == current_user.id ? 2 : 1)
+    @player = (@field.player_one_id == current_user.id ? 1 : 2)
+    p @player
     @friendly_captured_zones = []
     @enemy_captured_zones = []
 

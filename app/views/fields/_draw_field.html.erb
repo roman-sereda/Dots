@@ -26,47 +26,31 @@ $(document).ready(function(){
     ctx.stroke();
   }
 
-  for(var i = 0; i < 20; i++){
-    for(var j = 0; j < 20; j++){
+  <% 20.times do |i| %>
+    <% 20.times do |j| %>
       var ctx = field.getContext("2d");
       ctx.font = "8px Arial";
-      ctx.fillText(i + ', ' + j,i * 20, j * 20 - 5);
-    }
-  }
+      ctx.fillText(<%= points[i][j] %>,<%= i %> * 20, <%= j %> * 20 - 5);
+    <% end %>
+  <% end %>
 
   <% 20.times do |i| %>
     <% 20.times do |j| %>
-      if(<%= points[i][j] %> == 1){
-        var point = field.getContext('2d');
-
-        point.beginPath();
-        point.arc(<%= i %> * 20, <%= j %> * 20, 5, 0, 2*Math.PI, false);
-        point.fillStyle = 'red';
-        point.fill();
-        point.lineWidth = 1;
-        point.strokeStyle = 'red';
-        point.stroke();
+      if(<%= points[i][j] %> == <%= player %>){
+        draw_point([<%= i %>, <%= j %>], <%= current_user %>)
       }
-      else if(<%= points[i][j] %> == 2){
-        var point = field.getContext('2d');
-
-        point.beginPath();
-        point.arc(<%= i %> * 20, <%= j %> * 20, 5, 0, 2*Math.PI, false);
-        point.fillStyle = 'red';
-        point.fill();
-        point.lineWidth = 1;
-        point.strokeStyle = 'red';
-        point.stroke();
+      else if(<%= points[i][j] %> == <%= enemy %>){
+        draw_point([<%= i %>, <%= j %>], -1)
       }
     <% end %>
   <% end %>
 
   <% captured_zones.each do |points| %>
-    draw_zone(<%= raw points.as_json %>, "rgba(0,0,255,0.5)")
+    draw_zone(<%= raw points.as_json %>, <%= current_user %> )
   <% end %>
 
   <% enemy_captured_zones.each do |points| %>
-    draw_zone(<%= raw points.as_json %>, "rgba(255,0,0,0.5)")
+    draw_zone(<%= raw points.as_json %>, -1)
   <% end %>
 });
 
@@ -78,7 +62,7 @@ function draw_zone(coors, user){
   for(var i = 1; i < coors.length; i++){
     zone.lineTo(coors[i][0] * 20, coors[i][1] * 20)
   }
-  zone.fillStyle = (<%= current_user %> == user ? "rgba(0,0,255,0.6)" : "rgba(255,0,0,0.6)")
+  zone.fillStyle = (<%= current_user %> == user ? "rgba(0,0,2255,0.6)" : "rgba(255,0,0,0.6)")
   zone.fill()
 }
 
