@@ -153,14 +153,15 @@ class FieldsController < ApplicationController
   def show
     @field = Field.find(params[:id])
     @friendly_captured_zones = []
+    @enemy_captured_zones = []
 
     CapturedZone.where(player_id: current_user.id, field_id: params[:id]).each do |zone|
       @friendly_captured_zones.push(zone.points)
     end
 
-    p params[:id]
-    p current_user.id
-    p @friendly_captured_zones
+    CapturedZone.where(player_id: current_user.id == @field.player_one_id ? @field.player_two_id : @field.player_one_id, field_id: params[:id]).each do |zone|
+      @enemy_captured_zones.push(zone.points)
+    end
 
     render 'fields/show'
   end

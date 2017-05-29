@@ -54,11 +54,15 @@ $(document).ready(function(){
   <% end %>
 
   <% captured_zones.each do |points| %>
-    draw_zone(<%= raw points.as_json %> )
+    draw_zone(<%= raw points.as_json %>, "rgba(0,0,255,0.5)")
+  <% end %>
+
+  <% enemy_captured_zones.each do |points| %>
+    draw_zone(<%= raw points.as_json %>, "rgba(255,0,0,0.5)")
   <% end %>
 });
 
-function draw_zone(coors){
+function draw_zone(coors, color){
   var zone = field.getContext("2d")
   zone.beginPath()
   zone.moveTo(coors[0][0] * 20, coors[0][1] * 20)
@@ -66,7 +70,7 @@ function draw_zone(coors){
   for(var i = 1; i < coors.length; i++){
     zone.lineTo(coors[i][0] * 20, coors[i][1] * 20)
   }
-  zone.fillStyle = "rgba(0,0,255,0.5)"
+  zone.fillStyle = color
   zone.fill()
 }
 
