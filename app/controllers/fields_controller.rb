@@ -16,7 +16,7 @@ class FieldsController < ApplicationController
       end
     end
 
-    @field = Field.create(name: params[:field][:name], points: points, player_one_id: cerrent_user.id)
+    @field = Field.create(name: params[:field][:name], points: points, player_one_id: current_user.id)
 
     render 'fields/show'
   end
@@ -93,49 +93,57 @@ class FieldsController < ApplicationController
 
   def create_capture_zone checked_positions
 
+    p 'chp'
     p checked_positions
 
-    capture_points = []
-    capture_zone = []
+    captured_points = []
+    captured_zone = []
 
     checked_positions.each do | pos |
       4.times do |i|
-        p pos[0]
         next_checked = [ pos[0] + @steps[:x][i], pos[1] + @steps[:y][i] ]
-        p next_checked
 
-        if( @field.points[next_checked[0]][next_checked[1]] == "1" && !capture_points.include?( next_checked ))
-          capture_points.push( next_checked )
+        if( @field.points[next_checked[0]][next_checked[1]] == "1" && !captured_points.include?( next_checked ))
+          captured_points.push( next_checked )
         end
       end
     end
 
-    capture_points.each do |pos|
-      p pos
-    end
+    p 'cp:'
+    p captured_points
 
-    temp_point = capture_points[0]
+    temp_point = captured_points[0]
+    captured_zone.push( temp_point )
 
-    p capture_points.length
-
-    capture_points.length.times do |i|
-      p i
-      capture_points.length.times do |j|
-        4.times do |k|
-          temp_zone = [ temp_point[0] + @steps[:x][k], temp_point[1] + @steps[:y][k] ]
-
-          p "! #{temp_zone}"
-          p "# #{capture_points[j]}"
-
-          if(temp_zone == capture_points[j] && !capture_zone.include?( temp_zone ))
-            capture_zone.push( temp_point )
-            temp_point = temp_zone
+    captured_points.length.times do |q|
+      p 'continue'
+      for k in -1..1
+        do_break2 = false
+        for k2 in -1..1
+          do_break = false
+          if(@field.points[temp_point[0] + k][temp_point[1] + k2] == "1")
+            captured_points.each do | point |
+              if(temp_point[0] + k == point[0] && temp_point[1] + k2 == point[1] && !captured_zone.include?( point ))
+                temp_point = point
+                captured_zone.push( temp_point )
+                p 'back'
+                do_break = true
+                break
+              end
+            end
+          end
+          if(do_break)
+            do_break2 = true
+            break
           end
         end
+        break if do_break2
       end
     end
 
-    p capture_zone
+    p 'cz'
+    p captured_zone
+    CapturedZone.create(player_id: current_user.id, field_id: params[:id], points: captured_zone)
 
   end
 

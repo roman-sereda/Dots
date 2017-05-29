@@ -26,6 +26,14 @@ $(document).ready(function(){
     ctx.stroke();
   }
 
+  for(var i = 0; i < 20; i++){
+    for(var j = 0; j < 20; j++){
+      var ctx = field.getContext("2d");
+      ctx.font = "8px Arial";
+      ctx.fillText(i + ', ' + j,i * 20, j * 20 - 5);
+    }
+  }
+
   <% 20.times do |i| %>
     <% 20.times do |j| %>
       if(<%= points[i][j] %> == 1){
