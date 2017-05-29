@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170528080203) do
+ActiveRecord::Schema.define(version: 20170529125113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20170528080203) do
   create_table "captured_zones", force: :cascade do |t|
     t.integer "field_id"
     t.integer "player_id"
-    t.string "points", default: [], array: true
+    t.text "points", default: [], array: true
   end
 
   create_table "fields", force: :cascade do |t|
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20170528080203) do
     t.integer "player_two_score"
     t.boolean "is_finished"
     t.boolean "turn", default: false
+    t.boolean "closed", default: false
   end
 
   create_table "users", force: :cascade do |t|
