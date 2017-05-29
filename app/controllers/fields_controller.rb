@@ -35,6 +35,7 @@ class FieldsController < ApplicationController
     @x = params[:x].to_i
     @y = params[:y].to_i
     @player = (@field.player_one_id == current_user.id ? 1 : 2)
+    @enemy = (@field.player_one_id == current_user.id ? 2 : 1)
     @steps = { x: [0,-1,1,0], y: [-1,0,0,1] }
 
     p @player
@@ -63,7 +64,7 @@ class FieldsController < ApplicationController
     p '!'
 
     4.times do |i|
-      if(@field.points[@x + @steps[:x][i]][@y + @steps[:y][i]].to_i != @player && @field.points[@x + @steps[:x][i]][@y + @steps[:y][i]].to_i != -@player)
+      if(@field.points[@x + @steps[:x][i]][@y + @steps[:y][i]].to_i != @player)
         last_turn = 0
         has_end = true
         current_position = [ @x + @steps[:x][i] , @y + @steps[:y][i] ]
@@ -76,7 +77,7 @@ class FieldsController < ApplicationController
             4.times do |j|
               next_position = [ current_position[0] + @steps[:x][j], current_position[1] + @steps[:y][j] ]
 
-              if(@field.points[next_position[0]][next_position[1]].to_i != @player && @field.points[next_position[0]][next_position[1]].to_i != -@player && !checked_positions.include?(next_position) )
+              if(@field.points[next_position[0]][next_position[1]].to_i != @player && !checked_positions.include?(next_position) )
                 checked_positions.push(next_position)
               end
             end
@@ -153,8 +154,34 @@ class FieldsController < ApplicationController
     p captured_zone
     CapturedZone.create(player_id: current_user.id, field_id: params[:id], points: captured_zone)
 
-    captured_points.length.times do |i|
-      @field.points[captured_points[i][0]][captured_points[i][1]] = "#{-@player}";
+    score = 0
+
+    if(@player == 1)
+      score = @field.player_one_score
+    else
+      score = @field.player_two_score
+    end
+
+    p "e"
+    p @enemy
+    p @player
+
+    checked_positions.each do |point|
+      if(@field.points[point[0]][point[1]].to_i == @enemy)
+        score += 1
+        @field.points[point[0]][point[1]] = "#{-@enemy}"
+      else
+        @field.points[point[0]][point[1]] = "3"
+      end
+    end
+
+    p 'score'
+    p score
+
+    if(@player == 1)
+      @field.update_attributes(player_one_score: score)
+    else
+      @field.update_attributes(player_two_score: score)
     end
 
     ActionCable.server.broadcast 'game_channel', { type_to_add: 'capture_zone', coors: captured_zone, user: current_user.id }

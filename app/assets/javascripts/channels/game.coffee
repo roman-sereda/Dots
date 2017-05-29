@@ -11,3 +11,4 @@ App.game = App.cable.subscriptions.create "GameChannel",
     console.log('look up')
     draw_point(data.coors, data.user) if data.type_to_add = 'point'
     draw_zone(data.coors, data.user) if data.type_to_add = 'captured_zone'
+    update_score(data.score)

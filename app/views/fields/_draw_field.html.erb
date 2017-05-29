@@ -36,10 +36,10 @@ $(document).ready(function(){
 
   <% 20.times do |i| %>
     <% 20.times do |j| %>
-      if(<%= points[i][j] %> == <%= player %>){
+      if(<%= points[i][j] %> == <%= player %> || <%= points[i][j] %> == <%= -player %>){
         draw_point([<%= i %>, <%= j %>], <%= current_user %>)
       }
-      else if(<%= points[i][j] %> == <%= enemy %>){
+      else if(<%= points[i][j] %> == <%= enemy %> || <%= points[i][j] %> == <%= -enemy %>){
         draw_point([<%= i %>, <%= j %>], -1)
       }
     <% end %>
