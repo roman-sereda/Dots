@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170529125113) do
+ActiveRecord::Schema.define(version: 20170529225258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,8 +26,8 @@ ActiveRecord::Schema.define(version: 20170529125113) do
     t.text "points", default: [], array: true
     t.integer "player_one_id"
     t.integer "player_two_id"
-    t.integer "player_one_score"
-    t.integer "player_two_score"
+    t.integer "player_one_score", default: 0
+    t.integer "player_two_score", default: 0
     t.boolean "is_finished"
     t.boolean "turn", default: false
     t.boolean "closed", default: false
