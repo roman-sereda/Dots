@@ -39,4 +39,6 @@
       <%= render 'my_fields', field: field, player: @player %>
     <% end %>
   </div>
+
+  <div><%= link_to "Sign Out", '/users/sign_out', :method => :delete%></div>
 </div>

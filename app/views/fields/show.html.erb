@@ -22,6 +22,11 @@
   </div>
   <div class = 'panel panel-default'>
     <div class = 'panel-body'>
+      <% if @field.owner_surrender %>
+        Owner surrender
+      <% elsif @field.guest_surrender %>
+        Guest surrender
+      <% end %>
       <%= link_to 'Surrender', "/surrender/#{@field.id}" %>
     </div>
   </div>
@@ -29,7 +34,7 @@
 <div class = 'panel panel-default'>
   <div class = 'panel-body'>
     <span>
-      The game finished! 
+      The game finished!
     </span>
     Score: <span class = " <%= @player == 1 ? 'blue-text player-score' : 'red-text enemy-score' %>"><%= @field.guest_score%></span> :
            <span class = " <%= @player == 1 ? 'red-text enemy-score' : 'blue-text player-score' %>"><%= @field.owner_score%></span>
