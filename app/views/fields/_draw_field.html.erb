@@ -3,6 +3,8 @@
 var turn = <%= turn %>
 
 $(document).ready(function(){
+  console.log('initial turn')
+  console.log( turn )
 
   var field = document.getElementById("field")
 
@@ -63,10 +65,9 @@ function draw_zone(coors, user){
   zone.fill()
 }
 
-function draw_point(coors, user){
-  console.log(coors)
-  console.log('UPDATE')
-  turn == 1 ? turn = 2 : turn = 1
+function draw_point(coors, user, turn_temp){
+  console.log( turn_temp )
+  turn = turn_temp
   var point = field.getContext("2d")
 
   point.beginPath();
@@ -79,7 +80,6 @@ function draw_point(coors, user){
 }
 
 function update_score(player, enemy){
-  console.log('1')
   $("#player_score").text(player)
   $("#enemy_score").text(enemy)
 }
@@ -88,12 +88,14 @@ function getPosition(event){
   var rect = field.getBoundingClientRect();
   var x = event.clientX - rect.left;
   var y = event.clientY - rect.top;
-  console.log("x: " + x + " y: " + y);
 
   putPoint(x,y)
 }
 
 function putPoint(x,y){
+  if( turn == undefined){
+    turn = <%= turn %>
+  }
   console.log('turn')
   console.log( turn )
   console.log('player')

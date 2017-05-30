@@ -3,7 +3,6 @@ class FieldsController < ApplicationController
 
   def games
     @fields = Field.all
-    @player = current_user.id
     @avaliable_games = Field.where(closed: false)
     @my_games = (Field.where(owner_id: current_user.id) + Field.where(guest_id: current_user.id)).uniq
   end
@@ -55,22 +54,24 @@ class FieldsController < ApplicationController
 
     find_captured_zones
 
-    ActionCable.server.broadcast 'game_channel', { type_to_add: 'point', coors: [@x, @y], user: current_user.id, turn: @enemy}
+    p 'player'
+    p @player
+    p 'enemy'
+    p @enemy
+    p 'turn'
+    p @field.turn
+
+    ActionCable.server.broadcast 'game_channel', { type_to_add: 'point', turn: @field.turn, coors: [@x, @y], user: current_user.id, turn: @enemy}
   end
 
   def find_captured_zones
-    p 'try to find three nearest points'
     if there_is_nearest_points?
-      p 'found two nearest points'
       search_captured_zone
     end
 
   end
 
   def search_captured_zone
-
-    p '!'
-
     4.times do |i|
       if(@field.points[@x + @steps[:x][i]][@y + @steps[:y][i]].to_i != @player)
         last_turn = 0
@@ -109,10 +110,6 @@ class FieldsController < ApplicationController
   end
 
   def create_capture_zone checked_positions
-
-    p 'chp'
-    p checked_positions
-
     captured_points = []
     captured_zone = []
 
@@ -126,14 +123,10 @@ class FieldsController < ApplicationController
       end
     end
 
-    p 'cp:'
-    p captured_points
-
     temp_point = captured_points[0]
     captured_zone.push( temp_point )
 
     captured_points.length.times do |q|
-      p 'continue'
       for k in -1..1
         do_break2 = false
         for k2 in -1..1
@@ -143,7 +136,6 @@ class FieldsController < ApplicationController
               if(temp_point[0] + k == point[0] && temp_point[1] + k2 == point[1] && !captured_zone.include?( point ))
                 temp_point = point
                 captured_zone.push( temp_point )
-                p 'back'
                 do_break = true
                 break
               end
@@ -158,8 +150,6 @@ class FieldsController < ApplicationController
       end
     end
 
-    p 'cz'
-    p captured_zone
     CapturedZone.create(player_id: current_user.id, field_id: params[:id], points: captured_zone)
 
     score = 0
@@ -170,9 +160,6 @@ class FieldsController < ApplicationController
         @field.points[point[0]][point[1]] = "#{-@enemy}"
       end
     end
-
-    p 'score'
-    p score
 
     if(@owner)
       @field.update_attributes(owner_score: @field.owner_score + score)
@@ -194,12 +181,9 @@ class FieldsController < ApplicationController
 
     for i in -1..1
       for j in -1..1
-        p @field.points[@x + i][@y + j]
-        p @player
         count+=1 if @field.points[@x + i][@y + j].to_i == @player
       end
     end
-    p count
     return count >= 3 ? true : false
   end
 
@@ -217,6 +201,8 @@ class FieldsController < ApplicationController
     end
 
     games
+
+    p @player
 
     render 'fields/show'
   end
