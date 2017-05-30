@@ -7,15 +7,32 @@
                          :enemy_captured_zones => @enemy_captured_zones,
                          :turn => @field.turn %>
 
-<canvas class = "field" id = "field" width = "400" height = "400"></canvas>
+<% if !@field.is_finished %>
+  <canvas class = "field" id = "field" width = "400" height = "400"></canvas>
+  <div class = 'panel panel-default'>
+    <div class = 'panel-body'>
+      <span>
+        <span class = "<%= @field.turn == @player ? 'blue-text turn-label' : 'red-text turn-label' %>">
+          <%= @field.turn == @player ? "Your Turn  " : "Waiting for player  " %>
+        </span>
+      </span>
+      Score: <span class = " <%= @player == 1 ? 'blue-text player-score' : 'red-text enemy-score' %>"><%= @field.guest_score%></span> :
+             <span class = " <%= @player == 1 ? 'red-text enemy-score' : 'blue-text player-score' %>"><%= @field.owner_score%></span>
+    </div>
+  </div>
+  <div class = 'panel panel-default'>
+    <div class = 'panel-body'>
+      <%= link_to 'Surrender', "/surrender/#{@field.id}" %>
+    </div>
+  </div>
+<% else %>
 <div class = 'panel panel-default'>
   <div class = 'panel-body'>
     <span>
-      <span class = "<%= @field.turn == @player ? 'blue-text turn-label' : 'red-text turn-label' %>">
-        <%= @field.turn == @player ? "Your Turn  " : "Waiting for player  " %>
-      </span>
+      The game finished! 
     </span>
     Score: <span class = " <%= @player == 1 ? 'blue-text player-score' : 'red-text enemy-score' %>"><%= @field.guest_score%></span> :
            <span class = " <%= @player == 1 ? 'red-text enemy-score' : 'blue-text player-score' %>"><%= @field.owner_score%></span>
   </div>
 </div>
+<% end %>

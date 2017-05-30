@@ -15,9 +15,11 @@
         <div class = 'table-cell'>
           <%= yield %>
         </div>
-        <div class = 'table-cell'>
-          <%= render 'fields/menu' %>
-        </div>
+        <% if signed_in? %>
+          <div class = 'table-cell'>
+            <%= render 'fields/menu' %>
+          </div>
+        <% end %>
     </div>
   </body>
 </html>

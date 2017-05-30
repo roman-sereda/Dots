@@ -1,5 +1,5 @@
 class FieldsController < ApplicationController
-  before_action :qwe, only: [:new_point, :show]
+  before_action :qwe, only: [:new_point, :show, :surrender]
 
   def games
     @fields = Field.all
@@ -13,6 +13,19 @@ class FieldsController < ApplicationController
     @owner = @field.owner_id == current_user.id ? true : false
     @enemy = @owner ? 2 : 1
     @player = @owner ? 1 : 2
+  end
+
+  def surrender
+
+    @field = Field.find(params[:id])
+    @field.update_attributes(@owner ? {owner_surrender: true} : {guest_surrender: true})
+
+    if(@field.owner_surrender && @field.guest_surrender)
+      @field.update_attributes(is_finished: true)
+    end
+
+    redirect_to action: "show", id: @field.id
+
   end
 
   def index

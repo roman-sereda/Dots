@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   post  '/fields',          to: 'fields#create'
+  get   '/surrender/:id',       to: 'fields#surrender'
   post  '/new_point',       to: 'fields#new_point'
   get   '/fields/:id',      to: 'fields#show'
   get   '/accept_field/:id',to: 'fields#receive_request'
