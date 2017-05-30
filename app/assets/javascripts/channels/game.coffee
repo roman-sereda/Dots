@@ -6,9 +6,6 @@ App.game = App.cable.subscriptions.create "GameChannel",
     console.log('disconnected')
 
   received: (data) ->
-    console.log(data)
-    console.log(data.coors)
-    console.log('look up')
     if data.type_to_add = 'point'
       actions(data.turn)
       draw_point(data.coors, data.user)
