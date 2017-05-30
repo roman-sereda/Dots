@@ -1,0 +1,13 @@
+.main-menu{
+  margin: auto;
+  width: 600px;
+  text-align: center;
+}
+
+.red-badge{
+  background-color: red !important;
+}
+
+.green-badge{
+  background-color: freen !important;
+}

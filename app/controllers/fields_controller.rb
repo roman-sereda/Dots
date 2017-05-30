@@ -1,7 +1,12 @@
 class FieldsController < ApplicationController
 
   def index
-    @fields = Field.all
+
+    @fields = []
+
+    Field.all.each do |field|
+      fields.push({ points: field.points,  })
+    end
     @avaliable_games = Field.where(closed: false)
     @my_games = (Field.where(player_one_id: current_user.id) + Field.where(player_two_id: current_user.id)).uniq
   end
