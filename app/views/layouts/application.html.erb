@@ -9,6 +9,15 @@
   </head>
 
   <body>
-    <%= yield %>
+    <%= render 'fields/menu_drawer'%>
+    <div class = 'main'>
+      <div class = 'table'>
+        <div class = 'table-cell'>
+          <%= yield %>
+        </div>
+        <div class = 'table-cell'>
+          <%= render 'fields/menu' %>
+        </div>
+    </div>
   </body>
 </html>

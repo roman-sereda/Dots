@@ -1,0 +1,42 @@
+<div class = 'menu'>
+  <%= form_for :field, url: url_for(controller: 'fields', action: 'create') do |f| %>
+    <div class = 'table'>
+      <div class = 'table-cell'>
+        <span class = 'input-group'>
+          <span class = 'input-group-addon' id = 'basic-addon1'>Name:</span>
+          <%= f.text_field :name, class: 'form-control', placeholder: 'type here', data: {'aria-describedly': 'basic-addon1'} %>
+        </span>
+      </div>
+      <div class = 'table-cell create-button'>
+        <%= f.submit 'create', class: 'btn btn-default' %>
+      </div>
+    </div>
+
+
+  <% end %>
+
+  <ul class="nav nav-tabs">
+    <li role="presentation" onClick = "showAll();" class = "all active"><a >All</a></li>
+    <li role="presentation" onClick = "showAvaliable();" class = "avaliable" ><a >Avaliable</a></li>
+    <li role="presentation" onClick = "showMy();" class = 'my' ><a >Own</a></li>
+  </ul>
+
+
+  <div id = 'all-games'>
+    <% @fields.each do | field | %>
+      <%= render 'all_fields', field: field%>
+    <% end %>
+  </div>
+
+  <div id = 'avaliable-games'>
+    <% @avaliable_games.each do | field | %>
+      <%= render 'avaliable_fields', field: field %>
+    <% end %>
+  </div>
+
+  <div id = 'my-games'>
+    <% @my_games.each do | field | %>
+      <%= render 'my_fields', field: field, player: @player %>
+    <% end %>
+  </div>
+</div>

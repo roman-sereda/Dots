@@ -4,10 +4,6 @@ var turn = <%= turn %>
 
 $(document).ready(function(){
 
-  $('#all-games').show()
-  $('#avaliable-games').hide()
-  $('#my-games').hide()
-
   var field = document.getElementById("field")
 
   field.addEventListener("click", getPosition, false);
@@ -95,38 +91,6 @@ function getPosition(event){
   console.log("x: " + x + " y: " + y);
 
   putPoint(x,y)
-}
-
-function showAll(){
-  $('#all-games').show()
-  $('#avaliable-games').hide()
-  $('#my-games').hide()
-
-  toggleActiveClass('.all')
-}
-
-function showAvaliable(){
-  $('#all-games').hide()
-  $('#avaliable-games').show()
-  $('#my-games').hide()
-
-  toggleActiveClass('.avaliable')
-}
-
-function showMy(){
-  $('#all-games').hide()
-  $('#avaliable-games').hide()
-  $('#my-games').show()
-
-  toggleActiveClass('.my')
-}
-
-function toggleActiveClass( className ){
-  $('.all').removeClass('active')
-  $('.avaliable').removeClass('active')
-  $('.my').removeClass('active')
-
-  $(className).addClass( 'active' )
 }
 
 function putPoint(x,y){
