@@ -58,3 +58,11 @@ li{
 .nav{
   margin-bottom: 10px !important;
 }
+
+.blue-text{
+  color: blue;
+}
+
+.red-text{
+  color: red;
+}
