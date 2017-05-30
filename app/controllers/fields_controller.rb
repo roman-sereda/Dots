@@ -1,14 +1,23 @@
 class FieldsController < ApplicationController
+  before_action :qwe, only: [:new_point, :show]
+
+  def games
+    @fields = Field.all
+    @player = current_user.id
+    @avaliable_games = Field.where(closed: false)
+    @my_games = (Field.where(owner_id: current_user.id) + Field.where(guest_id: current_user.id)).uniq
+  end
+
+  def qwe
+    @steps = { x: [0,-1,1,0], y: [-1,0,0,1] }
+    @field = Field.find(params[:id])
+    @owner = @field.owner_id == current_user.id ? true : false
+    @enemy = @owner ? 2 : 1
+    @player = @owner ? 1 : 2
+  end
 
   def index
-
-    @fields = []
-
-    Field.all.each do |field|
-      fields.push({ points: field.points,  })
-    end
-    @avaliable_games = Field.where(closed: false)
-    @my_games = (Field.where(player_one_id: current_user.id) + Field.where(player_two_id: current_user.id)).uniq
+    games
   end
 
   def create
@@ -21,7 +30,7 @@ class FieldsController < ApplicationController
       end
     end
 
-    @field = Field.create(name: params[:field][:name], points: points, player_one_id: current_user.id)
+    @field = Field.create(name: params[:field][:name], points: points, owner_id: current_user.id, turn: 1)
 
     redirect_to action: "show", id: @field.id
   end
@@ -29,30 +38,24 @@ class FieldsController < ApplicationController
   def receive_request
 
     field = Field.find(params[:id])
-    field.update_attributes(player_two_id: current_user.id, closed: true)
+    field.update_attributes(guest_id: current_user.id, closed: true)
 
     redirect_to action: "show"
 
   end
 
   def new_point
-    @field = Field.find(params[:id])
     @x = params[:x].to_i
     @y = params[:y].to_i
-    @player = (@field.player_one_id == current_user.id ? 1 : 2)
-    @enemy = (@field.player_one_id == current_user.id ? 2 : 1)
-    @steps = { x: [0,-1,1,0], y: [-1,0,0,1] }
-
-    p @player
 
     temp_points = @field.points
     temp_points[@x][@y] = @player
 
-    @field.update_attributes(points: temp_points)
+    @field.update_attributes(points: temp_points, turn: @enemy)
 
     find_captured_zones
 
-    ActionCable.server.broadcast 'game_channel', { type_to_add: 'point', coors: [@x, @y], user: current_user.id}
+    ActionCable.server.broadcast 'game_channel', { type_to_add: 'point', coors: [@x, @y], user: current_user.id, turn: @enemy}
   end
 
   def find_captured_zones
@@ -161,16 +164,6 @@ class FieldsController < ApplicationController
 
     score = 0
 
-    if(@player == 1)
-      score = @field.player_one_score
-    else
-      score = @field.player_two_score
-    end
-
-    p "e"
-    p @enemy
-    p @player
-
     checked_positions.each do |point|
       if(@field.points[point[0]][point[1]].to_i == @enemy)
         score += 1
@@ -181,17 +174,17 @@ class FieldsController < ApplicationController
     p 'score'
     p score
 
-    if(@player == 1)
-      @field.update_attributes(player_one_score: score)
+    if(@owner)
+      @field.update_attributes(owner_score: @field.owner_score + score)
     else
-      @field.update_attributes(player_two_score: score)
+      @field.update_attributes(guest_score: @field.guest_score + score)
     end
 
     ActionCable.server.broadcast 'game_channel', {  type_to_add: 'capture_zone',
                                                     coors: captured_zone,
                                                     user: current_user.id,
-                                                    player_one_score: @field.player_one_score,
-                                                    player_two_score: @field.player_two_score }
+                                                    owner_score: @field.owner_score,
+                                                    guest_score: @field.guest_score }
 
   end
 
@@ -211,11 +204,7 @@ class FieldsController < ApplicationController
   end
 
   def show
-    @field = Field.find(params[:id])
     @current_user_id = current_user.id
-    @enemy = (@field.player_one_id == current_user.id ? 2 : 1)
-    @player = (@field.player_one_id == current_user.id ? 1 : 2)
-    p @player
     @friendly_captured_zones = []
     @enemy_captured_zones = []
 
@@ -223,9 +212,11 @@ class FieldsController < ApplicationController
       @friendly_captured_zones.push(zone.points)
     end
 
-    CapturedZone.where(player_id: current_user.id == @field.player_one_id ? @field.player_two_id : @field.player_one_id, field_id: params[:id]).each do |zone|
+    CapturedZone.where(player_id: @owner ?  @field.guest_id : @field.owner_id, field_id: params[:id]).each do |zone|
       @enemy_captured_zones.push(zone.points)
     end
+
+    games
 
     render 'fields/show'
   end

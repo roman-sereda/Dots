@@ -24,12 +24,12 @@ ActiveRecord::Schema.define(version: 20170529225258) do
   create_table "fields", force: :cascade do |t|
     t.string "name", null: false
     t.text "points", default: [], array: true
-    t.integer "player_one_id"
-    t.integer "player_two_id"
-    t.integer "player_one_score", default: 0
-    t.integer "player_two_score", default: 0
+    t.integer "owner_id"
+    t.integer "guest_id"
+    t.integer "owner_score", default: 0
+    t.integer "guest_score", default: 0
     t.boolean "is_finished"
-    t.boolean "turn", default: false
+    t.integer "turn", default: 0
     t.boolean "closed", default: false
   end
 

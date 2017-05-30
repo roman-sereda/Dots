@@ -1,6 +1,12 @@
 <script>
 
+var turn = <%= turn %>
+
 $(document).ready(function(){
+
+  $('#all-games').show()
+  $('#avaliable-games').hide()
+  $('#my-games').hide()
 
   var field = document.getElementById("field")
 
@@ -15,6 +21,7 @@ $(document).ready(function(){
     ctx.lineWidth = 1
     ctx.moveTo(20 * i - 1, 0);
     ctx.lineTo(20 * i - 1, 400);
+    ctx.strokeStyle = "rgba(0,0,0,0.6)";
     ctx.stroke();
   }
 
@@ -24,16 +31,9 @@ $(document).ready(function(){
     ctx.lineWidth = 1
     ctx.moveTo(0, 20 * i - 1);
     ctx.lineTo(400, 20 * i - 1);
+    ctx.strokeStyle = "rgba(0,0,0,0.6)";
     ctx.stroke();
   }
-
-  <% 20.times do |i| %>
-    <% 20.times do |j| %>
-      var ctx = field.getContext("2d");
-      ctx.font = "8px Arial";
-      ctx.fillText(<%= points[i][j] %>,<%= i %> * 20, <%= j %> * 20 - 5);
-    <% end %>
-  <% end %>
 
   <% 20.times do |i| %>
     <% 20.times do |j| %>
@@ -69,6 +69,8 @@ function draw_zone(coors, user){
 
 function draw_point(coors, user){
   console.log(coors)
+  console.log('UPDATE')
+  turn == 1 ? turn = 2 : turn = 1
   var point = field.getContext("2d")
 
   point.beginPath();
@@ -95,28 +97,69 @@ function getPosition(event){
   putPoint(x,y)
 }
 
+function showAll(){
+  $('#all-games').show()
+  $('#avaliable-games').hide()
+  $('#my-games').hide()
+
+  toggleActiveClass('.all')
+}
+
+function showAvaliable(){
+  $('#all-games').hide()
+  $('#avaliable-games').show()
+  $('#my-games').hide()
+
+  toggleActiveClass('.avaliable')
+}
+
+function showMy(){
+  $('#all-games').hide()
+  $('#avaliable-games').hide()
+  $('#my-games').show()
+
+  toggleActiveClass('.my')
+}
+
+function toggleActiveClass( className ){
+  $('.all').removeClass('active')
+  $('.avaliable').removeClass('active')
+  $('.my').removeClass('active')
+
+  $(className).addClass( 'active' )
+}
+
 function putPoint(x,y){
-  var point = field.getContext('2d');
-  if(( x / 20 - ~~( x / 20 )) > 0.5){
-    x = ~~(x / 20 + 1)
+  console.log('turn')
+  console.log( turn )
+  console.log('player')
+  console.log( <%= player %>)
+  if( turn == <%= player %>){
+    var point = field.getContext('2d');
+    if(( x / 20 - ~~( x / 20 )) > 0.5){
+      x = ~~(x / 20 + 1)
+    }else{
+      x = ~~(x / 20)
+    };
+
+    if(( y / 20 - ~~( y / 20 )) > 0.5){
+      y = ~~(y / 20 + 1)
+    }else{
+      y = ~~(y / 20)
+    };
+
+    $.ajax({
+      url: "/new_point",
+      type: "POST",
+      data: { id: <%= field_id %>, x: x, y: y },
+      success: function(resp){ }
+    });
+
+    checkForZones()
   }else{
-    x = ~~(x / 20)
-  };
+    alert('not your turn')
+  }
 
-  if(( y / 20 - ~~( y / 20 )) > 0.5){
-    y = ~~(y / 20 + 1)
-  }else{
-    y = ~~(y / 20)
-  };
-
-  $.ajax({
-    url: "/new_point",
-    type: "POST",
-    data: { id: <%= field_id %>, x: x, y: y },
-    success: function(resp){ }
-  });
-
-  checkForZones()
 }
 
 function checkForZones(){

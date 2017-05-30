@@ -1,30 +1,34 @@
-<div class = 'main-menu'>
-  <%= form_for :field, url: url_for(controller: 'fields', action: 'create') do |f| %>
-    Name: <%= f.text_field :name  %>
-    <%= f.submit %>
-  <% end %>
+<div class = 'main'>
+  <div class = 'table'>
+    <div class = 'table-cell'>
+      <canvas class = 'field' id = "field" width = "400" height = "400"></canvas>
+    </div>
+    <div class = 'table-cell'>
+      <div class = 'menu'>
+        <%= form_for :field, url: url_for(controller: 'fields', action: 'create') do |f| %>
+          Name: <%= f.text_field :name  %>
+          <button type = 'button' class = 'btn btn-default'><%= f.submit %></button>
+        <% end %>
 
-  <ul class="nav nav-tabs">
-    <li role="presentation" class="active"><a href="#">All games</a></li>
-    <li role="presentation"><a href="#">Avaliable Games</a></li>
-    <li role="presentation"><a href="#">My Games</a></li>
-  </ul>
+        <ul class="nav nav-tabs">
+          <li role="presentation " class="all active"><a href="#">All</a></li>
+          <li role="presentation" class = "avaliable"><a href="#">Avaliable</a></li>
+          <li role="presentation" class = "my"><a href="#">Own</a></li>
+        </ul>
 
-  <br><br>:
 
-  <% @fields.each do | field | %>
-    <%= render 'field', field: field%>
-  <% end %>
+        <% @fields.each do | field | %>
+          <%= render 'field', field: field, player: @player%>
+        <% end %>
 
-  <br><br>:
 
-  <% @avaliable_games.each do | field | %>
-    <%= link_to field.name, "accept_field/#{field.id}" %>
-  <% end %>
+        <% @avaliable_games.each do | field | %>
+          <%= link_to field.name, "accept_field/#{field.id}" %>
+        <% end %>
 
-  <br><br>:
-
-  <% @my_games.each do | field | %>
-    <%= link_to field.name, "fields/#{field.id}" %>
-  <% end %>
+        <% @my_games.each do | field | %>
+          <%= link_to field.name, "fields/#{field.id}" %>
+        <% end %>
+      </div>
+    </div>
 </div>

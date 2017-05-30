@@ -1,17 +1,60 @@
-<%= render 'draw_field', :points => @field.points,
-                         :field_id => @field.id,
-                         :player => @player,
-                         :enemy => @enemy,
-                         :current_user => @current_user_id,
-                         :captured_zones => @friendly_captured_zones,
-                         :enemy_captured_zones => @enemy_captured_zones %>
+<div class = 'main'>
+  <div class = 'table'>
+    <div class = 'table-cell'>
+      <%= render 'draw_field', :points => @field.points,
+                               :field_id => @field.id,
+                               :player => @player,
+                               :enemy => @enemy,
+                               :current_user => @current_user_id,
+                               :captured_zones => @friendly_captured_zones,
+                               :enemy_captured_zones => @enemy_captured_zones,
+                               :turn => @field.turn %>
 
-<canvas id = "field" width = "400" height = "400"></canvas>
+      <canvas class = "field" id = "field" width = "400" height = "400"></canvas>
 
-<%= link_to "Sign Out", destroy_user_session_path, :method => :delete %>
-<%= link_to 'back to list', '/'%>
-Current user: <%= @current_user_id %><br>
-Enemy: <%= @enemy %><br>
-Player: <%= @player %><br>
-Player score: <div id = 'player_score'><%= @field.player_one_score %></div>
-Enemy score: <div id = 'enemy_score'><%= @field.player_two_score %></div>
+    </div>
+    <div class = 'table-cell'>
+      <div class = 'menu'>
+        <%= form_for :field, url: url_for(controller: 'fields', action: 'create') do |f| %>
+          <div class = 'table'>
+            <div class = 'table-cell'>
+              <span class = 'input-group'>
+                <span class = 'input-group-addon' id = 'basic-addon1'>Name:</span>
+                <%= f.text_field :name, class: 'form-control', placeholder: 'type here', data: {'aria-describedly': 'basic-addon1'} %>
+              </span>
+            </div>
+            <div class = 'table-cell create-button'>
+              <%= f.submit 'create', class: 'btn btn-default' %>
+            </div>
+          </div>
+
+
+        <% end %>
+
+        <ul class="nav nav-tabs">
+          <li role="presentation" onClick = "showAll();" class = "all active"><a >All</a></li>
+          <li role="presentation" onClick = "showAvaliable();" class = "avaliable" ><a >Avaliable</a></li>
+          <li role="presentation" onClick = "showMy();" class = 'my' ><a >Own</a></li>
+        </ul>
+
+
+        <div id = 'all-games'>
+          <% @fields.each do | field | %>
+            <%= render 'all_fields', field: field%>
+          <% end %>
+        </div>
+
+        <div id = 'avaliable-games'>
+          <% @avaliable_games.each do | field | %>
+            <%= render 'avaliable_fields', field: field %>
+          <% end %>
+        </div>
+
+        <div id = 'my-games'>
+          <% @my_games.each do | field | %>
+            <%= render 'my_fields', field: field, player: @player %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+</div>
