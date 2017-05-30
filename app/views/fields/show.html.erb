@@ -10,7 +10,12 @@
 <canvas class = "field" id = "field" width = "400" height = "400"></canvas>
 <div class = 'panel panel-default'>
   <div class = 'panel-body'>
-    Score: <span class = "<%= @player == 1 ? 'blue-text' : 'red-text' %>"><%= @field.owner_score%></span> :
-           <span class = "<%= @player == 1 ? 'red-text' : 'blue-text' %>"><%= @field.guest_score%></span>
+    <span>
+      <span class = "<%= @field.turn == @player ? 'blue-text turn-label' : 'red-text turn-label' %>">
+        <%= @field.turn == @player ? "Your Turn  " : "Waiting for player  " %>
+      </span>
+    </span>
+    Score: <span class = " <%= @player == 1 ? 'blue-text player-score' : 'red-text enemy-score' %>"><%= @field.guest_score%></span> :
+           <span class = " <%= @player == 1 ? 'red-text enemy-score' : 'blue-text player-score' %>"><%= @field.owner_score%></span>
   </div>
 </div>

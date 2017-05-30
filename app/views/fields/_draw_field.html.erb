@@ -65,9 +65,18 @@ function draw_zone(coors, user){
   zone.fill()
 }
 
-function draw_point(coors, user, turn_temp){
+function actions(turn_temp){
   console.log( turn_temp )
   turn = turn_temp
+
+  $('.turn-label').text(turn == <%= @player %> ? 'Your Turn' : 'Waiting for player')
+  $('.turn-label').removeClass('red-text')
+  $('.turn-label').removeClass('blue-text')
+
+  $('.turn-label').addClass(turn == <%= @player %> ? 'blue-text' : 'red-text')
+}
+
+function draw_point(coors, user, turn_temp){
   var point = field.getContext("2d")
 
   point.beginPath();
@@ -80,8 +89,8 @@ function draw_point(coors, user, turn_temp){
 }
 
 function update_score(player, enemy){
-  $("#player_score").text(player)
-  $("#enemy_score").text(enemy)
+  $(".player-score").text(player)
+  $(".enemy-score").text(enemy)
 }
 
 function getPosition(event){
