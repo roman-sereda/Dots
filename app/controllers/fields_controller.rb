@@ -36,7 +36,7 @@ class FieldsController < ApplicationController
       @field.update_attributes(is_finished: true)
     end
 
-    redirect_to action: "show", id: @field.id
+    redirect_to action: "index"
   end
 
   def receive_request
@@ -55,6 +55,6 @@ class FieldsController < ApplicationController
     @field.update_attributes(points: temp_points, turn: @enemy)
     find_captured_zones
 
-    ActionCable.server.broadcast 'game_channel', { type_to_add: 'point', turn: @field.turn, coors: [@x, @y], user: current_user.id, turn: @enemy}
+    ActionCable.server.broadcast 'game_channel', { type_to_add: 'point', turn: @field.turn, coors: [@x, @y], user: current_user.id, turn: @enemy, field_id: @field.id}
   end
 end
