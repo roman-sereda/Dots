@@ -1,6 +1,6 @@
 <%= link_to "/fields/#{field.id}", class: "list-group-item game-li" do %>
   <% if field.guest_id == nil%>
-    <span class="badge">no guest</span>
+    <span class="badge" id = "<%= field.id %>_field" >no guest</span>
   <% elsif field.is_finished %>
     <span class="badge">finished</span>
   <% elsif field.turn == player %>
