@@ -86,7 +86,7 @@ function actions(turn_temp, field_id){
   $('.turn-label').addClass(turn == <%= @player %> ? 'blue-text' : 'red-text')
 }
 
-function draw_point(coors, user, turn_temp){
+function draw_point(coors, user){
   var point = field.getContext("2d")
 
   point.beginPath();
