@@ -128,7 +128,8 @@ module FieldHelper
                                                     coors: captured_zone,
                                                     user: current_user.id,
                                                     owner_score: @field.owner_score,
-                                                    guest_score: @field.guest_score }
+                                                    guest_score: @field.guest_score
+                                                     }
 
   end
 

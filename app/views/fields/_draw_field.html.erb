@@ -65,9 +65,19 @@ function draw_zone(coors, user){
   zone.fill()
 }
 
-function actions(turn_temp){
+function actions(turn_temp, field_id){
   console.log( turn_temp )
   turn = turn_temp
+
+  if(<%= player %> == turn){
+    $('#' + field_id + '_field').removeClass('red-badge')
+    $('#' + field_id + '_field').addClass('green-badge')
+    $('#' + field_id + '_field').text('your turn')
+  }else{
+    $('#' + field_id + '_field').removeClass('green-badge')
+    $('#' + field_id + '_field').addClass('red-badge')
+    $('#' + field_id + '_field').text('waiting')
+  }
 
   $('.turn-label').text(turn == <%= @player %> ? 'Your Turn' : 'Waiting for player')
   $('.turn-label').removeClass('red-text')
@@ -105,6 +115,10 @@ function putPoint(x,y){
   if( turn == undefined){
     turn = <%= turn %>
   }
+  console.log('turn')
+  console.log(turn)
+  console.log('player')
+  console.log(<%= player %>)
   if( turn == <%= player %>){
     var point = field.getContext('2d');
     if(( x / 20 - ~~( x / 20 )) > 0.5){

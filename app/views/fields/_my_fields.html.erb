@@ -1,10 +1,12 @@
 <%= link_to "/fields/#{field.id}", class: "list-group-item game-li" do %>
-  <% if field.is_finished %>
+  <% if field.guest_id == nil%>
+    <span class="badge">no guest</span>
+  <% elsif field.is_finished %>
     <span class="badge">finished</span>
-  <% elsif field.turn == (field.owner_id == player ? 1 : 2) %>
-    <span class="badge green-badge">your turn</span>
+  <% elsif field.turn == player %>
+    <span class="badge green-badge" id = "<%= field.id %>_field" >your turn</span>
   <% else %>
-    <span class="badge red-badge">waiting</span>
+    <span class="badge red-badge" id = "<%= field.id %>_field" >waiting</span>
   <% end %>
   <%= field.name %>
 <% end %>
