@@ -6,8 +6,15 @@ App.game = App.cable.subscriptions.create "GameChannel",
     console.log('disconnected')
 
   received: (data) ->
+<<<<<<< HEAD
+=======
+    console.log(data)
+    console.log(data.coors)
+    console.log('look up')
+    console.log(data.field_id)
+>>>>>>> develop
     if data.type_to_add = 'point'
-      actions(data.turn)
+      actions(data.turn, data.field_id)
       draw_point(data.coors, data.user)
     if data.type_to_add = 'captured_zone'
       update_score(data.owner_score, data.guest_score)

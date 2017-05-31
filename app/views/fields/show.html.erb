@@ -1,13 +1,12 @@
-<%= render 'draw_field', :points => @field.points,
-                         :field_id => @field.id,
-                         :player => @player,
-                         :enemy => @enemy,
-                         :current_user => @current_user_id,
-                         :captured_zones => @friendly_captured_zones,
-                         :enemy_captured_zones => @enemy_captured_zones,
-                         :turn => @field.turn %>
-
 <% if !@field.is_finished %>
+  <%= render 'draw_field', :points => @field.points,
+                           :field_id => @field.id,
+                           :player => @player,
+                           :enemy => @enemy,
+                           :current_user => @current_user_id,
+                           :captured_zones => @friendly_captured_zones,
+                           :enemy_captured_zones => @enemy_captured_zones,
+                           :turn => @field.turn %>
   <canvas class = "field" id = "field" width = "400" height = "400"></canvas>
   <div class = 'panel panel-default'>
     <div class = 'panel-body'>
